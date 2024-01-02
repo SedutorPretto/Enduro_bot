@@ -20,4 +20,5 @@ async def recording_client(message: Message, state: FSMContext, bot: Bot):
     await bot.send_message(data_record['ID'], text=f'Ваша запись ПОДТВЕРЖДЕНА!\n\n'
                                                    f'Ждем вас {data_record["Число"]} в {data_record["Время"]}\n'
                                                    f'Будем делать Ра-та-та')
+    await message.answer(text=f'Запись на {data_record["Число"]} в {data_record["Время"]} подтверждена')
     await state.clear()

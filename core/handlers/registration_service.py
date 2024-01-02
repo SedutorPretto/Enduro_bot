@@ -100,7 +100,7 @@ async def wrong_instructor_chosen(message: Message):
                              'Выберите инструктора:')
 
 
-@router.message(RegistrationTrip.choosing_moto, F.text.in_(INSTRUCTORS))
+@router.message(RegistrationTrip.choosing_moto, F.text.in_(MOTOBIKES))
 async def moto_chosen(message: Message, state: FSMContext):
     await state.update_data(moto=message.text)
     await message.answer(
@@ -168,5 +168,3 @@ async def another_registration(message: Message, state: FSMContext):
 async def finish_registration_incorrect(message: Message):
     await message.answer(text='Пожалуйста нажмите на одну из кнопок ниже:',
                          reply_markup=finish_keyboard())
-
-
