@@ -5,9 +5,8 @@ import logging
 
 from sqlalchemy import URL
 from aiogram import Bot, Dispatcher
-from aiogram.types import Message
 from core.settings import settings
-from core.handlers import registration_service, basic, admin_handlers
+from core.handlers import registration_service, basic, admin_handlers, add_employer
 from core.keyboards.set_menu import set_client_menu
 from core.database.engine import crt_async_engine, get_session_maker, proceed_schemas
 from core.database.base import BaseModel
@@ -20,15 +19,17 @@ async def start():
 
     await set_client_menu(bot)
 
+    dp.include_router(basic.router)
+    dp.include_router(add_employer.router)
     dp.include_router(registration_service.router)
     dp.include_router(admin_handlers.router)
-    dp.include_router(basic.router)
     dp.startup.register(basic.start_bot)
     dp.shutdown.register(basic.stop_bot)
 
     postgres_url = URL.create(
         'postgresql+asyncpg',
         username=os.getenv('db_user'),
+        password=os.getenv('db_password'),
         host=os.getenv('db_host'),
         database=os.getenv('db_name'),
         port=os.getenv('db_port')

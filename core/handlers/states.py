@@ -1,7 +1,7 @@
 from aiogram.fsm.state import State, StatesGroup
 
 
-class RegistrationTrip(StatesGroup):
+class FSMRegistrationTrip(StatesGroup):
     choosing_month = State()
     choosing_day = State()
     choosing_time = State()
@@ -16,10 +16,12 @@ class ConfirmRegistration(StatesGroup):
     confirm_record = State()
 
 
-class AddEmployer(StatesGroup):
+class FSMAddEmployer(StatesGroup):
     add_name = State()
     add_surname = State()
     add_phone = State()
     add_birthdate = State()
     add_position = State()
     add_photo = State()
+    editing_employer = State()
+    confirm_state = State()

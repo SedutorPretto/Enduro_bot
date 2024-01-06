@@ -4,7 +4,7 @@ from aiogram.types import Message
 
 
 class ChooseDay(BaseFilter):
-    def __call__(self, message: Message, state: FSMContext):
+    async def __call__(self, message: Message, state: FSMContext):
         user_data = await state.get_data()
         max_day = int(user_data['max_days'])
         try:
@@ -14,6 +14,6 @@ class ChooseDay(BaseFilter):
 
 
 class ChooseTime(BaseFilter):
-    def __call__(self, message: Message):
+    async def __call__(self, message: Message):
         hours, minutes = message.text.split(':')
-        return 9 <= int(hours) < 19 and (minutes == '00' or minutes == '30')
+        return 9 <= int(hours) < 19 and (minutes in ('00', '30'))

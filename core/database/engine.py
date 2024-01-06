@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 
 
 def crt_async_engine(url: URL | str) -> AsyncEngine:
-    return create_async_engine(url=url, echo=True, encoding='utf-8', pool_pre_ping=True)
+    return create_async_engine(url=url, echo=True, pool_pre_ping=True)
 
 
 async def proceed_schemas(engine: AsyncEngine, metadata) -> None:
