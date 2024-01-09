@@ -1,11 +1,14 @@
-from aiogram import Router, F, Bot
+from datetime import date
+from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import sessionmaker
 
-
+from core.database.staff import Staff
 from core.handlers.states import FSMAddEmployer
-from core.keyboards.add_employer import confirm_adding_employer_keyboard, edit_employer_keyboard
+from core.keyboards.add_employer import confirm_adding_employer_keyboard
 
 router = Router()
 
@@ -30,11 +33,16 @@ async def added_surname(message: Message, state: FSMContext):
     await state.set_state(FSMAddEmployer.add_phone)
 
 
-@router.message(FSMAddEmployer.add_phone)
+@router.message(FSMAddEmployer.add_phone, F.text.isdigit())
 async def added_phone(message: Message, state: FSMContext):
     await state.update_data(phone=message.text)
     await message.answer(text='Теперь введи дату рождения')
     await state.set_state(FSMAddEmployer.add_birthdate)
+
+
+@router.message(FSMAddEmployer.add_phone)
+async def wrong_added_phone(message: Message):
+    await message.answer(text='Теперь введи номер телефона\n в формате: 9ХХХХХХХХХ')
 
 
 @router.message(FSMAddEmployer.add_birthdate)
@@ -66,8 +74,21 @@ async def added_photo(message: Message, state: FSMContext):
 
 
 @router.callback_query(FSMAddEmployer.confirm_state, F.data == 'yes')
-async def added_employer(callback: CallbackQuery, state: FSMContext):
-    # todo добавление сотрудника в базу
+async def added_employer(callback: CallbackQuery, state: FSMContext, session_maker: sessionmaker):
+    user_data = await state.get_data()
+    async with session_maker() as session:
+        async with session.begin():
+            session: AsyncSession
+            employer = Staff(first_name=user_data["name"],
+                             surname=user_data["surname"],
+                             phone_number=user_data["phone"],
+                             birth_date=date.fromisoformat(user_data["birth_date"]),
+                             position=user_data["position"],
+                             telegram_photo=user_data['photo'])
+            session.add(employer)
+            await session.flush()
+            await session.commit()
+
     await callback.answer(
         text='Новый сотрудник создан и добавлен в базу!',
         show_alert=True

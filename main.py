@@ -9,7 +9,7 @@ from aiogram import Bot, Dispatcher
 from core.settings import settings
 from core.handlers import registration_service, basic, admin_handlers, add_employer
 from core.keyboards.set_menu import set_client_menu
-from core.database.base import BaseModel
+from core.database.staff import BaseModel
 
 
 async def start():
@@ -38,9 +38,10 @@ async def start():
     async_engine = create_async_engine(url=postgres_url, echo=True, pool_pre_ping=True)
     session_maker = async_sessionmaker(async_engine, expire_on_commit=False)
     async with async_engine.begin() as conn:
+        await conn.run_sync(BaseModel.metadata.drop_all)
         await conn.run_sync(BaseModel.metadata.create_all)
     try:
-        await dp.start_polling(bot)
+        await dp.start_polling(bot, session_maker=session_maker)
     finally:
         await bot.session.close()
 

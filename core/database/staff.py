@@ -1,20 +1,22 @@
+from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import BigInteger
 from datetime import date
 
-from core.database.base import BaseModel
+
+class BaseModel(DeclarativeBase):
+    pass
 
 
 class Staff(BaseModel):
-    __tablename__ = 'employees'
+    __tablename__ = 'employers'
 
-    user_id: Mapped[int] = mapped_column(BigInteger, unique=True, primary_key=True, autoincrement=True)
+    user_id: Mapped[int] = mapped_column(unique=True, primary_key=True, autoincrement=True)
     first_name: Mapped[str]
     surname: Mapped[str]
-    phone_number: Mapped[int]
+    phone_number: Mapped[str]
     birth_date: Mapped[date]
     position: Mapped[str] = mapped_column(nullable=False)
-    telegram_photo: Mapped[int] = mapped_column(BigInteger)
+    telegram_photo: Mapped[str]
 
-    def __str__(self):
+    def __repr__(self):
         return f'{Staff.first_name} {Staff.surname} {Staff.position}'
