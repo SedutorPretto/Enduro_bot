@@ -18,11 +18,9 @@ SERVICES = ['Площадка', 'Рельеф', 'Тур']
 LEXICON_COMMANDS_CLIENT = {
     '/start': 'Начать все заново',
     '/help': 'Справка по работе бота',
-    '/cancel': 'Отменить все действия',
+    '/cancel': 'Отменить действие',
     '/registration_trip': 'Записаться на покатушки',
     '/contacts': 'Наши контакты',
-    '/hard_enduro_bikes': 'Эндуро мотоциклы в прокате',
-    '/tour_enduro_bikes': 'Турэндуро мотоциклы в прокате',
     '/instructors': 'Лучшие инструктора',
 }
 
@@ -32,8 +30,8 @@ LEXICON_COMMANDS_ADMIN = {
     '/cancel': 'Отменить все действия',
     '/confirm_registration': 'Подтвердить регистрацию',
     '/happy_birthday': 'Предстоящие дни рождения',
-    '/add_instructor': 'Добавить инструктора',
-    '/delete_instructor': 'Удалить инструктора',
+    '/add_employer': 'Добавить инструктора',
+    '/change_instructor': 'Удалить инструктора',
 }
 
 LEXICON_EDIT_EMPLOYER = {'Имя': 'first_name',

@@ -3,17 +3,16 @@ from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
 
 from core.handlers.states import FSMRUDEmployer
-from core.database.staff import Staff
+from core.database.models import Staff
 from core.keyboards.CRUD_employer import choose_edit_employer_keyboard, edit_employer_keyboard
 
 router = Router()
 
 
-@router.message(Command('delete_employer'))
+@router.message(Command('change_instructor'))
 async def receive_name(message: Message, state: FSMContext):
     await message.answer(text='Введи Имя сотрудника, которого хочешь изменить')
     await state.set_state(FSMRUDEmployer.receive_name)
@@ -23,11 +22,11 @@ async def receive_name(message: Message, state: FSMContext):
 async def receive_employers(message: Message, state: FSMContext, session_maker: sessionmaker):
     async with session_maker() as session:
         async with session.begin():
-            result: AsyncSession
             result = await session.execute(select(Staff).filter(Staff.first_name == message.text))
-            staff_instance = result.all()
+            staff_instance = result.scalars()
         if staff_instance:
-            res = '\n'.join([str(staff) for staff in staff_instance])
+            res = '\n'.join([f'ID:{staff.user_id} - {staff.first_name} {staff.surname} - {staff.position}'
+                             for staff in staff_instance])
             await message.answer(text=f'{res}\n'
                                       f'Введи ID сотрудника которого хочешь изменить')
             await state.set_state(FSMRUDEmployer.receive_id)

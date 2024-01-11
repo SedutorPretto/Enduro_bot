@@ -9,7 +9,7 @@ from core.keyboards.registration_service import month_keyboard, time_keyboard, \
 from core.settings import settings
 from core.utils.registration_service import max_days_in_month, day_name
 from core.lexicon.lexicon_ru import AVAILABLE_MONTHS, MOTOBIKES, INSTRUCTORS, SERVICES
-from core.filters.registration_service import ChooseDay, ChooseTime
+from core.filters.client_filters import ChooseDay, ChooseTime
 
 router = Router()
 

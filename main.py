@@ -7,9 +7,11 @@ from sqlalchemy import URL
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from aiogram import Bot, Dispatcher
 from core.settings import settings
-from core.handlers import registration_service, basic, admin_handlers, add_employer, RUD_employers
+from core.handlers import basic
+from core.handlers.client_handlers import registration_service, client_handlers
+from core.handlers.admin_handlers import add_employer, RUD_employers, common_admin_handlers
 from core.keyboards.set_menu import set_client_menu
-from core.database.staff import BaseModel
+from core.database.models import BaseModel
 
 
 async def start():
@@ -22,7 +24,8 @@ async def start():
     dp.include_router(basic.router)
     dp.include_router(add_employer.router)
     dp.include_router(registration_service.router)
-    dp.include_router(admin_handlers.router)
+    dp.include_router(common_admin_handlers.router)
+    dp.include_router(client_handlers.router)
     dp.include_router(RUD_employers.router)
     dp.startup.register(basic.start_bot)
     dp.shutdown.register(basic.stop_bot)

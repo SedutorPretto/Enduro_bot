@@ -5,7 +5,7 @@ from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery
 from sqlalchemy.orm import sessionmaker
 
-from core.database.staff import Staff
+from core.database.models import Staff
 from core.handlers.states import FSMAddEmployer
 from core.keyboards.CRUD_employer import confirm_adding_employer_keyboard
 
@@ -35,7 +35,7 @@ async def added_surname(message: Message, state: FSMContext):
 @router.message(FSMAddEmployer.add_phone, F.text.isdigit())
 async def added_phone(message: Message, state: FSMContext):
     await state.update_data(phone=message.text)
-    await message.answer(text='Теперь введи дату рождения')
+    await message.answer(text='Теперь введи дату рождения\n в формате: ГГГГ-ММ-ДД')
     await state.set_state(FSMAddEmployer.add_birthdate)
 
 
@@ -44,7 +44,7 @@ async def wrong_added_phone(message: Message):
     await message.answer(text='Теперь введи номер телефона\n в формате: 9ХХХХХХХХХ')
 
 
-@router.message(FSMAddEmployer.add_birthdate)
+@router.message(FSMAddEmployer.add_birthdate) # todo фильтр на проверку корректной даты
 async def added_birthdate(message: Message, state: FSMContext):
     await state.update_data(birth_date=message.text)
     await message.answer(text='Теперь введи должность')
