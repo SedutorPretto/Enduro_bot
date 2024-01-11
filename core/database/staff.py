@@ -19,4 +19,4 @@ class Staff(BaseModel):
     telegram_photo: Mapped[str]
 
     def __repr__(self):
-        return f'{Staff.first_name} {Staff.surname} {Staff.position}'
+        return f'{self.user_id} - {self.first_name} {self.surname} - {self.position}'

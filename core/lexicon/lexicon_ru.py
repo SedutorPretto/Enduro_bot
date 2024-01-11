@@ -36,9 +36,9 @@ LEXICON_COMMANDS_ADMIN = {
     '/delete_instructor': 'Удалить инструктора',
 }
 
-LEXICON_EDIT_EMPLOYER = {'Имя': 'name',
+LEXICON_EDIT_EMPLOYER = {'Имя': 'first_name',
                          'Фамилия': 'surname',
-                         'Телефон': 'phone',
+                         'Телефон': 'phone_number',
                          'Дата рождения': 'birth_date',
                          'Позиция': 'position',
-                         'Фото': 'photo'}
+                         'Фото': 'telegram_photo'}

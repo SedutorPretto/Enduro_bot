@@ -25,3 +25,11 @@ class FSMAddEmployer(StatesGroup):
     add_photo = State()
     editing_employer = State()
     confirm_state = State()
+
+
+class FSMRUDEmployer(StatesGroup):
+    receive_name = State()
+    receive_id = State()
+    choose_edit_employer = State()
+    update_employer = State()
+    finish_state = State()

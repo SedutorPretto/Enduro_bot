@@ -3,12 +3,11 @@ from aiogram import Router, F
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import Command
 from aiogram.types import Message, CallbackQuery
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
 
 from core.database.staff import Staff
 from core.handlers.states import FSMAddEmployer
-from core.keyboards.add_employer import confirm_adding_employer_keyboard
+from core.keyboards.CRUD_employer import confirm_adding_employer_keyboard
 
 router = Router()
 
@@ -78,7 +77,6 @@ async def added_employer(callback: CallbackQuery, state: FSMContext, session_mak
     user_data = await state.get_data()
     async with session_maker() as session:
         async with session.begin():
-            session: AsyncSession
             employer = Staff(first_name=user_data["name"],
                              surname=user_data["surname"],
                              phone_number=user_data["phone"],

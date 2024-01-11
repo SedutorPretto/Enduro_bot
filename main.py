@@ -7,7 +7,7 @@ from sqlalchemy import URL
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from aiogram import Bot, Dispatcher
 from core.settings import settings
-from core.handlers import registration_service, basic, admin_handlers, add_employer
+from core.handlers import registration_service, basic, admin_handlers, add_employer, RUD_employers
 from core.keyboards.set_menu import set_client_menu
 from core.database.staff import BaseModel
 
@@ -23,6 +23,7 @@ async def start():
     dp.include_router(add_employer.router)
     dp.include_router(registration_service.router)
     dp.include_router(admin_handlers.router)
+    dp.include_router(RUD_employers.router)
     dp.startup.register(basic.start_bot)
     dp.shutdown.register(basic.stop_bot)
 
@@ -38,7 +39,6 @@ async def start():
     async_engine = create_async_engine(url=postgres_url, echo=True, pool_pre_ping=True)
     session_maker = async_sessionmaker(async_engine, expire_on_commit=False)
     async with async_engine.begin() as conn:
-        await conn.run_sync(BaseModel.metadata.drop_all)
         await conn.run_sync(BaseModel.metadata.create_all)
     try:
         await dp.start_polling(bot, session_maker=session_maker)
