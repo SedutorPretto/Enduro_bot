@@ -18,3 +18,14 @@ async def instructors_view(message: Message, session_maker: sessionmaker):
     for ins in instructors:
         await message.answer_photo(ins.telegram_photo,
                                    caption=f'{ins.first_name} {ins.surname}')
+
+
+@router.message(Command('contacts'))
+async def contacts_view(message: Message):
+    await message.answer(text='Позвонить ☎️ +79881421427\n\n'
+                              '<a href="http://t.me/enduro23_sochi">Написать в ТГ</a>\n\n'
+                              '<a href="http://t.me/enduro23sochi">Наблюдать за нами</a>\n\n'
+                              'Проехать:\nСочи, Адлерский район, ул. Краснофлотская, 1а\n\n'
+                              '<a href="https://yandex.ru/maps/org/enduro23/125365567287/'
+                              '?ll=39.988092%2C43.506737&z=14">Построить маршрут</a>',
+                         disable_web_page_preview=True)
