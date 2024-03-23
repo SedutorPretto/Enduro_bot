@@ -10,6 +10,7 @@ from core.settings import settings
 from core.utils.registration_service import max_days_in_month, day_name
 from core.lexicon.lexicon_ru import AVAILABLE_MONTHS, MOTOBIKES, INSTRUCTORS, SERVICES
 from core.filters.client_filters import ChooseDay, ChooseTime
+from core.filters.admin_filters import CorrectPhone
 
 router = Router()
 
@@ -28,7 +29,6 @@ async def month_chosen(message: Message, state: FSMContext):
     await state.update_data(max_days=max_days_in_month(message.text))
     await message.answer(
         text='Ввведите число на которое хотите записаться:')
-    # todo сделать чтобы в строке ввода тоже писалось про число
     await state.set_state(FSMRegistrationTrip.choosing_day)
 
 
@@ -82,8 +82,8 @@ async def service_chosen(message: Message, state: FSMContext):
 @router.message(FSMRegistrationTrip.choosing_service)
 async def wrong_service_chosen(message: Message):
     await message.reply(text='На такую услугу нельзя записаться через бота\n\n'
-                             'Выберите из представленных или свяжитесь с нами:')
-        # todo вставить телефон чтоб можно было сразу звонить
+                             'Выберите из представленных или свяжитесь с нами:\n\n ☎️ +79881421427',
+                        reply_markup=service_keyboard())
 
 
 @router.message(FSMRegistrationTrip.choosing_instructor, F.text.in_(INSTRUCTORS))
@@ -104,15 +104,23 @@ async def wrong_instructor_chosen(message: Message):
 async def moto_chosen(message: Message, state: FSMContext):
     await state.update_data(moto=message.text)
     await message.answer(
-        text='Напишите комментарии если необходимо или нажмите "Пропустить"',
-        reply_markup=comment_keyboard())
-    await state.set_state(FSMRegistrationTrip.adding_comments)
+        text='Введите свой телефон для обратной связи в формате: \n\n +79ХХХХХХХХХ',
+        )
+    await state.set_state(FSMRegistrationTrip.adding_phone)
 
 
 @router.message(FSMRegistrationTrip.choosing_moto)
 async def wrong_moto_chosen(message: Message):
     await message.reply(text='Такого мотоцикла в этот день у нас нет\n\n'
                              'Выберите другой:')
+
+
+@router.message(FSMRegistrationTrip.adding_phone, CorrectPhone())
+async def add_phone(message: Message, state: FSMContext):
+    await state.update_data(phone=message.text)
+    await message.answer(text='Напишите комментарии если необходимо или нажмите "Пропустить"',
+                         reply_markup=comment_keyboard())
+    await state.set_state(FSMRegistrationTrip.adding_comments)
 
 
 @router.message(FSMRegistrationTrip.adding_comments)
@@ -130,6 +138,7 @@ async def add_comment(message: Message, state: FSMContext):
              f'Услуга: {user_data["service"]}\n'
              f'Инструктор: {user_data["instructor"]}\n'
              f'Мотоцикл: {user_data["moto"]}\n'
+             f'Телефон: {user_data["phone"]}\n'
              f'Комментарий: {user_data["comment"]}\n'
              f'Все верно?',
         reply_markup=finish_keyboard()
@@ -137,10 +146,15 @@ async def add_comment(message: Message, state: FSMContext):
     await state.set_state(FSMRegistrationTrip.finish_state)
 
 
+@router.message(FSMRegistrationTrip.adding_phone)
+async def wrong_phone(message: Message):
+    await message.answer(text='Пожалуйста введите корректный номер телефона в формате: \n\n'
+                              '+79ХХХХХХХХХ')
+
+
 @router.message(FSMRegistrationTrip.finish_state, F.text == 'Записаться')
 async def finish_registration(message: Message, state: FSMContext, bot: Bot):
     user_data = await state.get_data()
-    # day = day_name(user_data["month"], user_data["day"])   todo костыль, заменить
     await message.answer(text='Ожидайте подверждения',
                          reply_markup=ReplyKeyboardRemove())
     await bot.send_message(settings.bots.admin_id,
@@ -152,6 +166,7 @@ async def finish_registration(message: Message, state: FSMContext, bot: Bot):
                                 f'Услуга- {user_data["service"]}\n'
                                 f'Инструктор- {user_data["instructor"]}\n'
                                 f'Мотоцикл- {user_data["moto"]}\n'
+                                f'Телефон- {user_data["phone"]}\n'
                                 f'Комментарий- {user_data["comment"]}\n')
     await state.clear()
     await state.set_data({})

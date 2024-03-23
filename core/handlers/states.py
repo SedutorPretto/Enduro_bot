@@ -8,6 +8,7 @@ class FSMRegistrationTrip(StatesGroup):
     choosing_service = State()
     choosing_instructor = State()
     choosing_moto = State()
+    adding_phone = State()
     adding_comments = State()
     finish_state = State()
 

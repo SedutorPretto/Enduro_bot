@@ -8,6 +8,7 @@ from sqlalchemy.orm import sessionmaker
 from core.database.models import Staff
 from core.handlers.states import FSMAddEmployer
 from core.keyboards.CRUD_employer import confirm_adding_employer_keyboard
+from core.filters.admin_filters import CorrectData, CorrectPhone
 
 router = Router()
 
@@ -21,18 +22,19 @@ async def add_employer(message: Message, state: FSMContext):
 @router.message(FSMAddEmployer.add_name)
 async def added_name(message: Message, state: FSMContext):
     await state.update_data(name=message.text)
-    await message.answer(text='Теперь введи фамилию')
+    await message.answer(text='Теперь введи фамилию на русском')
     await state.set_state(FSMAddEmployer.add_surname)
 
 
 @router.message(FSMAddEmployer.add_surname)
 async def added_surname(message: Message, state: FSMContext):
     await state.update_data(surname=message.text)
-    await message.answer(text='Теперь введи номер телефона')
+    await message.answer(text='Теперь введи номер телефона в формате: \n'
+                              '+79XXXXXXXXX')
     await state.set_state(FSMAddEmployer.add_phone)
 
 
-@router.message(FSMAddEmployer.add_phone, F.text.isdigit())
+@router.message(FSMAddEmployer.add_phone, CorrectPhone())
 async def added_phone(message: Message, state: FSMContext):
     await state.update_data(phone=message.text)
     await message.answer(text='Теперь введи дату рождения\n в формате: ГГГГ-ММ-ДД')
@@ -41,14 +43,19 @@ async def added_phone(message: Message, state: FSMContext):
 
 @router.message(FSMAddEmployer.add_phone)
 async def wrong_added_phone(message: Message):
-    await message.answer(text='Теперь введи номер телефона\n в формате: 9ХХХХХХХХХ')
+    await message.answer(text='<b>ОШИБКА</b>,  введи номер телефона\n в формате: +79ХХХХХХХХХ')
 
 
-@router.message(FSMAddEmployer.add_birthdate) # todo фильтр на проверку корректной даты
+@router.message(FSMAddEmployer.add_birthdate, CorrectData())
 async def added_birthdate(message: Message, state: FSMContext):
     await state.update_data(birth_date=message.text)
     await message.answer(text='Теперь введи должность')
     await state.set_state(FSMAddEmployer.add_position)
+
+
+@router.message(FSMAddEmployer.add_birthdate)
+async def wrong_added_birthdate(message: Message):
+    await message.answer(text='Ошибка, введи дату рождения\n в формате: ГГГГ-ММ-ДД')
 
 
 @router.message(FSMAddEmployer.add_position)

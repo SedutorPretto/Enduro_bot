@@ -29,3 +29,7 @@ async def contacts_view(message: Message):
                               '<a href="https://yandex.ru/maps/org/enduro23/125365567287/'
                               '?ll=39.988092%2C43.506737&z=14">Построить маршрут</a>',
                          disable_web_page_preview=True)
+
+@router.message(Command('help'))
+async def help_view(message: Message):
+    await message.answer()

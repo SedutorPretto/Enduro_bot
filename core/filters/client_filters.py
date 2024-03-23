@@ -15,5 +15,9 @@ class ChooseDay(BaseFilter):
 
 class ChooseTime(BaseFilter):
     async def __call__(self, message: Message):
-        hours, minutes = message.text.split(':')
-        return 9 <= int(hours) < 19 and (minutes in ('00', '30'))
+        try:
+            hours, minutes = message.text.split(':')
+            return 9 <= int(hours) < 19 and (minutes in ('00', '30'))
+        except ValueError:
+            return False
+        
