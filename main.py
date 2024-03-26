@@ -15,7 +15,7 @@ from core.database.models import BaseModel
 
 
 async def start():
-    bot = Bot(token=settings.bots.bot_token, parse_mode='HTML')
+    bot = Bot(token=settings.tg_bot.bot_token, parse_mode='HTML')
 
     dp = Dispatcher()
 

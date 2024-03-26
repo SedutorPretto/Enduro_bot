@@ -31,7 +31,7 @@ LEXICON_COMMANDS_ADMIN = {
     '/confirm_registration': 'Подтвердить регистрацию',
     '/happy_birthday': 'Предстоящие дни рождения',
     '/add_employer': 'Добавить инструктора',
-    '/change_instructor': 'Удалить инструктора',
+    '/change_instructor': 'Удалить/изменить инструктора',
 }
 
 LEXICON_EDIT_EMPLOYER = {'Имя': 'first_name',

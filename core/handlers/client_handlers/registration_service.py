@@ -157,7 +157,7 @@ async def finish_registration(message: Message, state: FSMContext, bot: Bot):
     user_data = await state.get_data()
     await message.answer(text='Ожидайте подверждения',
                          reply_markup=ReplyKeyboardRemove())
-    await bot.send_message(settings.bots.admin_id,
+    await bot.send_message(settings.tg_bot.admin_id,
                            text=f'Имя- {message.from_user.full_name}\n'
                                 f'ID- {message.from_user.id}\n'
                                 f'Ник- {message.from_user.username}\n'

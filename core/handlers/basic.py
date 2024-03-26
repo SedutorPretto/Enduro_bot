@@ -9,11 +9,11 @@ router = Router()
 
 
 async def start_bot(bot: Bot):
-    await bot.send_message(settings.bots.admin_id, text='Бот завелся!')
+    await bot.send_message(settings.tg_bot.admin_id, text='Бот завелся!')
 
 
 async def stop_bot(bot: Bot):
-    await bot.send_message(settings.bots.admin_id, text='Бот заглох!')
+    await bot.send_message(settings.tg_bot.admin_id, text='Бот заглох!')
 
 
 @router.message(CommandStart())
