@@ -1,9 +1,10 @@
 from aiogram import Router, F, Bot
-from aiogram.types import Message, ReplyKeyboardRemove
-from aiogram.filters import Command, StateFilter, CommandStart
+from aiogram.types import Message
+from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
 from core.settings import settings
-from aiogram.fsm.state import default_state
+from core.keyboards.base_menu import base_client_keyboard, base_admin_keyboard
+from core.lexicon.lexicon_ru import LEXICON_HELP_ADMIN, LEXICON_HELP_CLIENT
 
 router = Router()
 
@@ -17,16 +18,32 @@ async def stop_bot(bot: Bot):
 
 
 @router.message(CommandStart())
-async def get_start(message: Message, state: FSMContext):
+async def get_start(message: Message, state: FSMContext, admin_check):
     await state.clear()
-    await message.answer(text=f'Приветствуем {message.from_user.full_name}!',
-                         reply_markup=ReplyKeyboardRemove())
+    if admin_check:
+        await message.answer(text=f'Приветствуем {message.from_user.full_name}!',
+                             reply_markup=base_admin_keyboard())
+    else:
+        await message.answer(text=f'Приветствуем {message.from_user.full_name}!',
+                             reply_markup=base_client_keyboard())
 
 
 @router.message(Command('cancel'))
-@router.message(F.text == 'Отмена' or F.text == 'отмена')
+@router.message(F.text.lower() == 'отмена')
 async def action_cancel(message: Message, state: FSMContext):
     await state.clear()
     await state.set_data({})
     await message.answer(text='Действие отменено',
-                         reply_markup=ReplyKeyboardRemove())
+                         reply_markup=base_client_keyboard())
+
+
+@router.message(Command('help'))
+async def helper(message: Message, admin_check):
+    if admin_check:
+        await message.answer(text=LEXICON_HELP_ADMIN,
+                             reply_markup=base_admin_keyboard())
+    else:
+        await message.answer(text=LEXICON_HELP_CLIENT,
+                             reply_markup=base_client_keyboard())
+
+

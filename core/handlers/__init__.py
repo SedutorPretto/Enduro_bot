@@ -1,7 +1,7 @@
 from .basic import router as basic_router
 from .admin_handlers.add_employer import router as add_employer_router
 from .admin_handlers.common_admin_handlers import router as common_admin_handlers_router
-from .admin_handlers.RUD_employers import router as rud_employers_router
+from .admin_handlers.rud_employers import router as rud_employers_router
 from .client_handlers.client_handlers import router as client_handlers_router
 from .client_handlers.registration_service import router as registration_service_router
 

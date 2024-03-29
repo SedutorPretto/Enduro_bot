@@ -9,14 +9,13 @@ from aiogram import Bot, Dispatcher
 from core.settings import settings
 from core.handlers import basic
 from core.handlers.client_handlers import registration_service, client_handlers
-from core.handlers.admin_handlers import add_employer, RUD_employers, common_admin_handlers
+from core.handlers.admin_handlers import add_employer, rud_employers, common_admin_handlers
 from core.keyboards.set_menu import set_client_menu
 from core.database.models import BaseModel
-
+from core.middlewares.outer import AdminStatusMiddleware, AdminCheckMiddleware
 
 async def start():
     bot = Bot(token=settings.tg_bot.bot_token, parse_mode='HTML')
-
     dp = Dispatcher()
 
     await set_client_menu(bot)
@@ -26,9 +25,14 @@ async def start():
     dp.include_router(registration_service.router)
     dp.include_router(common_admin_handlers.router)
     dp.include_router(client_handlers.router)
-    dp.include_router(RUD_employers.router)
+    dp.include_router(rud_employers.router)
     dp.startup.register(basic.start_bot)
     dp.shutdown.register(basic.stop_bot)
+
+    dp.update.middleware(AdminStatusMiddleware())
+    add_employer.router.message.middleware(AdminCheckMiddleware())
+    rud_employers.router.message.middleware(AdminCheckMiddleware())
+    common_admin_handlers.router.message.middleware(AdminCheckMiddleware())
 
     postgres_url = URL.create(
         'postgresql+asyncpg',

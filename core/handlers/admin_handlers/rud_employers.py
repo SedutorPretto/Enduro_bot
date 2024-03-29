@@ -13,6 +13,7 @@ router = Router()
 
 
 @router.message(Command('change_instructor'))
+@router.message(F.text.lower() == 'удалить/изменить инструктора')
 async def receive_name(message: Message, state: FSMContext):
     await message.answer(text='Введи Имя сотрудника, которого хочешь изменить')
     await state.set_state(FSMRUDEmployer.receive_name)

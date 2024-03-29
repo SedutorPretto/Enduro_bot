@@ -1,4 +1,4 @@
-from aiogram import Router
+from aiogram import Router, F
 from aiogram.types import Message
 from aiogram.filters import Command
 from sqlalchemy import select
@@ -10,6 +10,7 @@ router = Router()
 
 
 @router.message(Command('instructors'))
+@router.message(F.text.lower() == 'лучшие инструктора')
 async def instructors_view(message: Message, session_maker: sessionmaker):
     async with session_maker() as session:
         async with session.begin():
@@ -30,6 +31,7 @@ async def contacts_view(message: Message):
                               '?ll=39.988092%2C43.506737&z=14">Построить маршрут</a>',
                          disable_web_page_preview=True)
 
-@router.message(Command('help'))
-async def help_view(message: Message):
+
+@router.message(Command('call_me'))
+async def callback_view(message: Message):
     await message.answer()

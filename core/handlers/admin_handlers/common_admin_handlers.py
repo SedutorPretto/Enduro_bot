@@ -14,6 +14,7 @@ router = Router()
 
 
 @router.message(Command('confirm_record'))
+@router.message(F.text.lower() == 'подтвердить регистрацию')
 async def confirm_record(message: Message,  state: FSMContext):
     await message.answer(text='Выбери запись которую нужно подтвердить')
     await state.set_state(ConfirmRegistration.confirm_record)
@@ -30,6 +31,7 @@ async def recording_client(message: Message, state: FSMContext, bot: Bot):
 
 
 @router.message(Command('happy_birthday'))
+@router.message(F.text.lower() == 'предстоящие дни рождения')
 async def happy_birthday(message: Message, session_maker: sessionmaker):
     async with session_maker() as session:
         async with session.begin():

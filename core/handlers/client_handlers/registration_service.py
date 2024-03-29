@@ -16,6 +16,7 @@ router = Router()
 
 
 @router.message(Command('registration_trip'))
+@router.message(F.text.lower() == 'записаться на покатушки')
 async def service_registration(message: Message, state: FSMContext):
     await message.answer(text='Выберите месяц на который хотите записаться:',
                          reply_markup=month_keyboard())
@@ -74,7 +75,7 @@ async def wrong_time_chosen(message: Message):
 @router.message(FSMRegistrationTrip.choosing_service, F.text.in_(SERVICES))
 async def service_chosen(message: Message, state: FSMContext):
     await state.update_data(service=message.text)
-    await message.answer(text='Выберите инструктора:',
+    await message.answer(text='Выберите инструктора:',  # todo инструктора из базы
                          reply_markup=instructors_keyboard())
     await state.set_state(FSMRegistrationTrip.choosing_instructor)
 
