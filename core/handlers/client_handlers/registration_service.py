@@ -2,6 +2,7 @@ from aiogram import Router, F, Bot
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, ReplyKeyboardRemove
 from aiogram.filters import Command
+from sqlalchemy.orm import sessionmaker
 
 from core.handlers.states import FSMRegistrationTrip
 from core.keyboards.registration_service import month_keyboard, time_keyboard, \
@@ -73,10 +74,11 @@ async def wrong_time_chosen(message: Message):
 
 
 @router.message(FSMRegistrationTrip.choosing_service, F.text.in_(SERVICES))
-async def service_chosen(message: Message, state: FSMContext):
+async def service_chosen(message: Message, state: FSMContext, session_maker: sessionmaker):
     await state.update_data(service=message.text)
+    keyboard = await instructors_keyboard(session_maker)
     await message.answer(text='Выберите инструктора:',  # todo инструктора из базы
-                         reply_markup=instructors_keyboard())
+                         reply_markup=keyboard)
     await state.set_state(FSMRegistrationTrip.choosing_instructor)
 
 
@@ -140,7 +142,7 @@ async def add_comment(message: Message, state: FSMContext):
              f'Инструктор: {user_data["instructor"]}\n'
              f'Мотоцикл: {user_data["moto"]}\n'
              f'Телефон: {user_data["phone"]}\n'
-             f'Комментарий: {user_data["comment"]}\n'
+             f'Комментарий: {user_data["comment"]}\n\n'
              f'Все верно?',
         reply_markup=finish_keyboard()
     )
@@ -162,7 +164,7 @@ async def finish_registration(message: Message, state: FSMContext, bot: Bot):
                            text=f'Имя- {message.from_user.full_name}\n'
                                 f'ID- {message.from_user.id}\n'
                                 f'Ник- {message.from_user.username}\n'
-                                f'Число- {user_data["month"]} {user_data["day"]} это {user_data["day_name"]}\n'
+                                f'Число-  {user_data["day"]} {user_data["month"]} это {user_data["day_name"]}\n'
                                 f'Время- {user_data["time"]}\n'
                                 f'Услуга- {user_data["service"]}\n'
                                 f'Инструктор- {user_data["instructor"]}\n'
