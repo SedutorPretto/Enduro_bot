@@ -13,8 +13,12 @@ class FSMRegistrationTrip(StatesGroup):
     finish_state = State()
 
 
-class ConfirmRegistration(StatesGroup):
+class FSMConfirmRegistration(StatesGroup):
     confirm_record = State()
+
+
+class FSMCallback(StatesGroup):
+    confirm_contact = State()
 
 
 class FSMAddEmployer(StatesGroup):

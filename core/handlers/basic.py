@@ -45,5 +45,3 @@ async def helper(message: Message, admin_check):
     else:
         await message.answer(text=LEXICON_HELP_CLIENT,
                              reply_markup=base_client_keyboard())
-
-

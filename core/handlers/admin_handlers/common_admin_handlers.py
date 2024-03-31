@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import text
 
 from core.utils.admin import dict_from_message
-from core.handlers.states import ConfirmRegistration
+from core.handlers.states import FSMConfirmRegistration
 
 
 router = Router()
@@ -17,10 +17,10 @@ router = Router()
 @router.message(F.text.lower() == 'подтвердить регистрацию')
 async def confirm_record(message: Message,  state: FSMContext):
     await message.answer(text='Выбери запись которую нужно подтвердить')
-    await state.set_state(ConfirmRegistration.confirm_record)
+    await state.set_state(FSMConfirmRegistration.confirm_record)
 
 
-@router.message(ConfirmRegistration.confirm_record, F.text)
+@router.message(FSMConfirmRegistration.confirm_record, F.text)
 async def recording_client(message: Message, state: FSMContext, bot: Bot):
     data_record = dict_from_message(message.text)
     await bot.send_message(data_record['ID'], text=f'Ваша запись ПОДТВЕРЖДЕНА!\n\n'

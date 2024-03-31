@@ -6,6 +6,8 @@ def base_client_keyboard() -> ReplyKeyboardMarkup:
     builder = ReplyKeyboardBuilder()
     for item in LEXICON_COMMANDS_CLIENT:
         builder.add(KeyboardButton(text=item))
+    builder.add(KeyboardButton(text='Обратный звонок',
+                               request_contact=True))
     builder.adjust(2)
     return builder.as_markup(resize_keyboard=True)
 

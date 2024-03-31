@@ -14,6 +14,7 @@ from core.keyboards.set_menu import set_client_menu
 from core.database.models import BaseModel
 from core.middlewares.outer import AdminStatusMiddleware, AdminCheckMiddleware
 
+
 async def start():
     bot = Bot(token=settings.tg_bot.bot_token, parse_mode='HTML')
     dp = Dispatcher()
@@ -33,6 +34,8 @@ async def start():
     add_employer.router.message.middleware(AdminCheckMiddleware())
     rud_employers.router.message.middleware(AdminCheckMiddleware())
     common_admin_handlers.router.message.middleware(AdminCheckMiddleware())
+
+    await bot.delete_webhook(drop_pending_updates=True)
 
     postgres_url = URL.create(
         'postgresql+asyncpg',
