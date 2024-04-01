@@ -8,7 +8,7 @@ from aiogram.types import Message
 class CorrectData(BaseFilter):
     async def __call__(self, message: Message):
         try:
-            datetime.strptime(message.text, 'Y%-m%-d%')
+            datetime.strptime(message.text, '%Y-%m-%d')
             return True
         except ValueError:
             return False
