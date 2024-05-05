@@ -26,6 +26,8 @@ services:
     restart: unless-stopped
     shm_size: 128mb
     env_file: '.env'
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
