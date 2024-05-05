@@ -5,4 +5,4 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache -r /app/requirements.txt
 COPY core /app/bot
-CMD ["python", "-m", "bot"]
+CMD ["python", "-m", "Enduro_bot"]
