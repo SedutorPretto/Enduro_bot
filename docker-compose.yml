@@ -1,0 +1,40 @@
+version: '3'
+services:
+  bot:
+    image: sedutorpretto/enduro_bot:latest
+    restart: unless-stopped
+    env_file: '.env'
+    environment:
+      REDIS_HOST: redis-fsm
+      REDIS_PORT: 6379
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+    depends_on:
+      - redis-fsm
+      - db
+
+  redis-fsm:
+    image: redis:7
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+    volumes:
+      - redis_data:/data
+
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    shm_size: 128mb
+    env_file: '.env'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+
+volumes:
+  redis_data:
+  postgres_data:
