@@ -4,5 +4,5 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache -r /app/requirements.txt
-COPY Enduro_bot /app/bot
-CMD ["python", "-m", "bot"]
+COPY . /app/bot
+CMD ["python", "bot"]
