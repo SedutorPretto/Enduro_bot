@@ -7,11 +7,9 @@ services:
     environment:
       REDIS_HOST: redis-fsm
       REDIS_PORT: 6379
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
     depends_on:
       - redis-fsm
-      - db
+      - postgres
 
   redis-fsm:
     image: redis:7
@@ -21,7 +19,7 @@ services:
     volumes:
       - redis_data:/data
 
-  db:
+  postgres:
     image: postgres:16
     restart: unless-stopped
     shm_size: 128mb
