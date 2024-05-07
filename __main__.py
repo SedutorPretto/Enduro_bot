@@ -1,4 +1,3 @@
-import os
 import sys
 import asyncio
 import logging
@@ -18,7 +17,7 @@ from core.middlewares.outer import AdminStatusMiddleware, AdminCheckMiddleware
 
 async def start():
     bot = Bot(token=settings.tg_bot.bot_token, parse_mode='HTML')
-    redis = Redis(host='localhost')
+    redis = Redis(host='redis-fsm')
     storage = RedisStorage(redis=redis)
     dp = Dispatcher(storage=storage)
 
@@ -42,11 +41,11 @@ async def start():
 
     postgres_url = URL.create(
         'postgresql+asyncpg',
-        username=os.getenv('db_user'),
-        password=os.getenv('db_password'),
-        host=os.getenv('db_host'),
-        database=os.getenv('db_name'),
-        port=os.getenv('db_port')
+        username=settings.db_postgres.db_user,
+        password=settings.db_postgres.db_password,
+        host=settings.db_postgres.db_host,
+        database=settings.db_postgres.database,
+        port=settings.db_postgres.db_port
     )
 
     async_engine = create_async_engine(url=postgres_url, echo=True, pool_pre_ping=True)
