@@ -2,6 +2,7 @@ from aiogram import Router, F, Bot
 from aiogram.types import Message
 from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
+
 from core.settings import settings
 from core.keyboards.base_menu import base_client_keyboard, base_admin_keyboard
 from core.keyboards.set_menu import set_admin_menu, set_client_menu
@@ -21,14 +22,14 @@ async def stop_bot(bot: Bot):
 @router.message(CommandStart())
 async def get_start(bot: Bot, message: Message, state: FSMContext, admin_check):
     await state.clear()
-    if admin_check:
+    if admin_check is True:
         await message.answer(text=f'Приветствуем {message.from_user.full_name}!',
                              reply_markup=base_admin_keyboard())
-        await set_admin_menu(bot)
+        await set_admin_menu(bot=bot)
     else:
         await message.answer(text=f'Приветствуем {message.from_user.full_name}!',
                              reply_markup=base_client_keyboard())
-        await set_client_menu(bot)
+        await set_client_menu(bot=bot)
 
 
 
