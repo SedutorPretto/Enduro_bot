@@ -22,14 +22,15 @@ async def stop_bot(bot: Bot):
 async def get_start(bot: Bot, message: Message, state: FSMContext, admin_check):
     await state.clear()
     if admin_check:
-        keyboard = base_admin_keyboard()
+        await message.answer(text=f'Приветствуем {message.from_user.full_name}!',
+                             reply_markup=base_admin_keyboard())
         await set_admin_menu(bot)
     else:
-        keyboard = base_client_keyboard()
+        await message.answer(text=f'Приветствуем {message.from_user.full_name}!',
+                             reply_markup=base_client_keyboard())
         await set_client_menu(bot)
 
-    await message.answer(text=f'Приветствуем {message.from_user.full_name}!',
-                             reply_markup=keyboard)
+
 
 
 @router.message(Command('cancel'))
@@ -38,25 +39,23 @@ async def action_cancel(message: Message, state: FSMContext, admin_check):
     await state.clear()
     await state.set_data({})
     if admin_check:
-        keyboard = base_admin_keyboard()
+        await message.answer(text='Действие отменено',
+                             reply_markup=base_admin_keyboard())
     else:
-        keyboard = base_client_keyboard()
-
-    await message.answer(text='Действие отменено',
-                         reply_markup=keyboard)
+        await message.answer(text='Действие отменено',
+                             reply_markup=base_client_keyboard())
 
 
 @router.message(Command('help'))
 async def helper(bot: Bot, message: Message, admin_check):
     if admin_check:
-        keyboard = base_admin_keyboard()
-        text = LEXICON_HELP_ADMIN
+        await message.answer(text=LEXICON_HELP_ADMIN,
+                             reply_markup=base_admin_keyboard())
         await set_admin_menu(bot)
     else:
-        keyboard = base_client_keyboard()
-        text = LEXICON_HELP_CLIENT
+        await message.answer(text=LEXICON_HELP_CLIENT,
+                             reply_markup=base_client_keyboard())
         await set_client_menu(bot)
 
 
-    await message.answer(text=text,
-                         reply_markup=keyboard)
+

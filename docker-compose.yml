@@ -1,6 +1,7 @@
 version: '3'
 services:
   bot:
+    container_name: bot
     image: sedutorpretto/enduro_bot:latest
     restart: unless-stopped
     env_file: '.env'
