@@ -7,6 +7,8 @@ services:
     environment:
       REDIS_HOST: redis-fsm
       REDIS_PORT: 6379
+      POSTGRES_HOST: ${DB_HOST}
+      POSTGRES_PORT: ${DB_PORT}
     depends_on:
       - redis-fsm
       - postgres
@@ -22,12 +24,16 @@ services:
   postgres:
     image: postgres:16
     restart: unless-stopped
-    shm_size: 128mb
     env_file: '.env'
     environment:
-      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
 
   adminer:
     image: adminer

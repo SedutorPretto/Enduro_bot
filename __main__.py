@@ -10,7 +10,7 @@ from core.settings import settings
 from core.handlers import basic
 from core.handlers.client_handlers import registration_service, client_handlers
 from core.handlers.admin_handlers import add_employer, rud_employers, common_admin_handlers
-from core.keyboards.set_menu import set_client_menu
+from core.keyboards.set_menu import set_common_menu
 from core.database.models import BaseModel
 from core.middlewares.outer import AdminStatusMiddleware, AdminCheckMiddleware
 
@@ -21,7 +21,7 @@ async def start():
     storage = RedisStorage(redis=redis)
     dp = Dispatcher(storage=storage)
 
-    await set_client_menu(bot)
+    await set_common_menu(bot)
 
     dp.include_router(basic.router)
     dp.include_router(add_employer.router)
